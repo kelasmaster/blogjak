@@ -4,4 +4,4 @@ Mengganti logo sangat mudah sekali yakni dengan mengubah url image dengan url la
 - Uplaod dengan cara centang tanda +
 - Ambil url /images/logo.png. Usahakan nama logo sama
 - Cara lain adalah dengan klik gambar dan tampilkan di browser lalu copy dan tempelkan di html
-- Format html adalah > <img src="url_logo">
+- Format html adalah ``` <img src="url_logo"> ```
