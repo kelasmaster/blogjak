@@ -1,4 +1,4 @@
-/* Basic Reset */
+<!-- styles.css -->
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
@@ -7,8 +7,8 @@ body {
   padding: 0 20px;
 }
 
-/* Header Styles */
 .navbar {
+  position: relative; /* Added for mobile menu positioning */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -36,7 +36,6 @@ body {
 .nav-links li { margin-left: 1.5rem; }
 .nav-links a { color: white; text-decoration: none; }
 
-/* Mobile Menu */
 #menu-toggle { display: none; }
 
 @media (max-width: 768px) {
@@ -49,11 +48,15 @@ body {
     position: absolute;
     top: 100%;
     left: 0;
+    z-index: 1000; /* Added for menu visibility */
   }
-  #menu-toggle:checked ~ .nav-links { display: flex; }
+  #menu-toggle:checked ~ .nav-links { 
+    display: flex; 
+    position: absolute;
+    width: 100%;
+  }
 }
 
-/* Footer Styles */
 footer {
   background: #333;
   color: white;
@@ -80,7 +83,6 @@ footer {
   .social-media { margin-top: 1rem; }
 }
 
-/* Content Styles */
 .content {
   max-width: 800px;
   margin: 2rem auto;
