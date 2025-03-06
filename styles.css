@@ -13,8 +13,8 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  background: #333;
-  color: white;
+  background: #FFA500;
+  color:black;
 }
 
 .logo img { height: 50px; }
@@ -58,7 +58,7 @@ body {
 }
 
 footer {
-  background: #333;
+  background: #4169E1;
   color: white;
   text-align: center;
   padding: 1rem;
