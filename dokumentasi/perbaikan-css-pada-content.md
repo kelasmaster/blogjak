@@ -5,6 +5,7 @@ Ada dua masalah ketika melihat tampilan postingan yakni
 2. Gambar Tidak Responsif
 
 Semua sudah saya update dengan menambah ccs:
+```
 .content h2 {
   text-align: center;
 }
@@ -12,3 +13,4 @@ Semua sudah saya update dengan menambah ccs:
   width: 100%;
   height: auto;
 }
+```
