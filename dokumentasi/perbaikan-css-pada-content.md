@@ -1,5 +1,5 @@
 # Perbaikan CSS Pada Content
-Ada dua masalah ketika melihat tampilan postingan yakni
+Ada bebrapa masalah ketika melihat tampilan postingan yakni
 
 1. Title post tidak di tengah
 2. Gambar tidak responsif
