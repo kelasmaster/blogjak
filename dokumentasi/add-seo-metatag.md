@@ -21,3 +21,5 @@ Use this SEO metatag tool for it:
 ```
 https://kelasmaster.github.io/metatag-generator/
 ```
+Preview image:
+!SEO Metatag](https://kelasmaster.github.io/blogjak/images/seo-metatag.png)
