@@ -1,5 +1,5 @@
 Add SEO meta tag in header
-'''
+```
 <meta name="description" content="Jasa laundry kiloan dan satuan di Jakarta, Bogor, dan Purwokerto. Kami juga menjual peralatan dan perlengakapan laundry seperti parfum, deterjen, dan softener."> 
 <link rel="canonical" href="https://bandarlaundry.github.io/blog"> 
 <!-- Open Graph / Facebook --> <meta property="og:type" content="website"> 
@@ -15,9 +15,9 @@ Add SEO meta tag in header
 <meta name="twitter:image" content="https://raw.githubusercontent.com/bandarlaundry/blog/refs/heads/images/bandarlaundry-logo-tr.png"> 
 <meta name="twitter:site" content="@bandarlaundry"> 
 <meta name="twitter:creator" content="@bandarlaundry">
-'''
+```
 
 Use this SEO metatag tool for it:
-'''
+```
 https://kelasmaster.github.io/metatag-generator/
-'''
+```
