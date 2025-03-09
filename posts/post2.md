@@ -3,11 +3,6 @@
 **Posted on:** March 5, 2025
 
 
-### Gambar Produk
-
-| Gambar 1  | Gambar 2 | Gambar 3 |
-| ------------- | ------------- | ------------- |
-| ![Alt text](https://raw.githubusercontent.com/bandarlaundry/blog/refs/heads/main/images/bl-ebook-laundry-naik-kelas.webp)  | ![Alt text](https://raw.githubusercontent.com/bandarlaundry/blog/refs/heads/images/bl-instant-pos-laundry.webp)  | ![Alt text](https://raw.githubusercontent.com/bandarlaundry/blog/refs/heads/images/bl-ade-dari-sulawesi-ke-bogor-demi-ikut-kelas-sabun.webp)  |
 
 ### Pertanyaan Yang Sering Diajukan (FAQ)
 <details>
