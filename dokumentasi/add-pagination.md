@@ -104,7 +104,7 @@ JSON
 ```
 
 CSS
-```
+```ruby
 /* Added to styles.css */
 .pagination {
   display: flex;
