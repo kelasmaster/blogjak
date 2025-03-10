@@ -1,4 +1,3 @@
-:---: 
 # My First Blog Post
 
 **Posted on:** Marchy 1, 2025
