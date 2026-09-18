@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kelas Master - Blog & Tutorial</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+
+  <!-- Element Container Header -->
+  <div id="header"></div>
+
+  <!-- Content utama -->
+  <main class="content">
+    <div id="post-list" class="post-list"></div>
+    <div id="pagination" class="pagination"></div>
+  </main>
+
+  <!-- Element Container Footer -->
+  <div id="footer"></div>
+
+  <script>
+    const postsPerPage = 5; // Jumlah postingan per halaman
+    let currentPage = 1;
+    let allPosts = [];
+
+    // Inisialisasi Fitur Dark Mode Global
+    function initDarkMode() {
+      const toggleBtn = document.getElementById('theme-toggle');
+      const savedTheme = localStorage.getItem('theme') || 
+        (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+
+      if (savedTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        if (toggleBtn) toggleBtn.innerHTML = '<i class="fas fa-sun"></i>';
+      }
+
+      if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => {
+          const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+          const newTheme = isDark ? 'light' : 'dark';
+          
+          document.documentElement.setAttribute('data-theme', newTheme);
+          localStorage.setItem('theme', newTheme);
+          toggleBtn.innerHTML = isDark ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+        });
+      }
+    }
+
+    // Load Header & Footer secara Dinamis
+    fetch('header.html')
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById('header').innerHTML = html;
+        initDarkMode(); // Jalankan skrip dark mode setelah header selesai di-render
+      });
+
+    fetch('footer.html')
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById('footer').innerHTML = html;
+        document.getElementById('year').textContent = new Date().getFullYear();
+      });
+
+    // Load dan Render Postingan dari posts.json
+    fetch('posts.json')
+      .then(res => res.json())
+      .then(posts => {
+        allPosts = posts;
+        renderPosts(currentPage);
+        renderPagination();
+      })
+      .catch(err => {
+        document.getElementById('post-list').innerHTML = '<p>Gagal memuat daftar postingan.</p>';
+      });
+
+    // Fungsi Render Daftar Postingan (dengan Excerpt)
+    function renderPosts(page) {
+      const postList = document.getElementById('post-list');
+      postList.innerHTML = '';
+
+      const start = (page - 1) * postsPerPage;
+      const end = start + postsPerPage;
+      const paginatedPosts = allPosts.slice(start, end);
+
+      if (paginatedPosts.length === 0) {
+        postList.innerHTML = '<p>Belum ada postingan.</p>';
+        return;
+      }
+
+      paginatedPosts.forEach(post => {
+        const postElement = document.createElement('div');
+        postElement.classList.add('post-item');
+        postElement.innerHTML = `
+          <h3><a href="${post.url}">${post.title}</a></h3>
+          <span class="post-date">${post.date}</span>
+          <p class="post-excerpt">${post.excerpt || ''}</p>
+        `;
+        postList.appendChild(postElement);
+      });
+    }
+
+    // Fungsi Render Tombol Pagination
+    function renderPagination() {
+      const paginationContainer = document.getElementById('pagination');
+      paginationContainer.innerHTML = '';
+
+      const totalPages = Math.ceil(allPosts.length / postsPerPage);
+      if (totalPages <= 1) return;
+
+      // Tombol Previous
+      const prevBtn = document.createElement('button');
+      prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+      prevBtn.disabled = currentPage === 1;
+      prevBtn.addEventListener('click', () => {
+        if (currentPage > 1) {
+          currentPage--;
+          renderPosts(currentPage);
+          renderPagination();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
+      paginationContainer.appendChild(prevBtn);
+
+      // Tombol Nomor Halaman
+      for (let i = 1; i <= totalPages; i++) {
+        const pageBtn = document.createElement('button');
+        pageBtn.textContent = i;
+        if (i === currentPage) pageBtn.classList.add('active');
+
+        pageBtn.addEventListener('click', () => {
+          currentPage = i;
+          renderPosts(currentPage);
+          renderPagination();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        paginationContainer.appendChild(pageBtn);
+      }
+
+      // Tombol Next
+      const nextBtn = document.createElement('button');
+      nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+      nextBtn.disabled = currentPage === totalPages;
+      nextBtn.addEventListener('click', () => {
+        if (currentPage < totalPages) {
+          currentPage++;
+          renderPosts(currentPage);
+          renderPagination();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
+      paginationContainer.appendChild(nextBtn);
+    }
+  </script>
+</body>
+</html>
