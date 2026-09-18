@@ -1,72 +1,89 @@
-<!-- posts/post1.html -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Post Title 2</title>
+  <title>Detail Post - Kelas Master</title>
   <link rel="stylesheet" href="../styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
   <div id="header"></div>
-  
-  <div class="content">
-    <div id="post-content"></div>
-  </div>
+
+  <main class="content">
+    <article id="post-content"></article>
+
+    <!-- Navigation Prev & Next -->
+    <div id="post-nav" class="post-navigation"></div>
+  </main>
 
   <div id="footer"></div>
 
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script>
-  // Fungsi Pengatur Dark Mode Global
-  function setupDarkMode() {
-    const toggleBtn = document.getElementById('theme-toggle');
-    const currentTheme = localStorage.getItem('theme') || 
-      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    // Init Dark Mode
+    function initDarkMode() {
+      const toggleBtn = document.getElementById('theme-toggle');
+      const savedTheme = localStorage.getItem('theme') || 
+        (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 
-    if (currentTheme === 'dark') {
-      document.documentElement.setAttribute('data-theme', 'dark');
-      if (toggleBtn) toggleBtn.innerHTML = '<i class="fas fa-sun"></i>';
+      if (savedTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        if (toggleBtn) toggleBtn.innerHTML = '<i class="fas fa-sun"></i>';
+      }
+
+      if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => {
+          const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+          const newTheme = isDark ? 'light' : 'dark';
+          
+          document.documentElement.setAttribute('data-theme', newTheme);
+          localStorage.setItem('theme', newTheme);
+          toggleBtn.innerHTML = isDark ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+        });
+      }
     }
 
-    if (toggleBtn) {
-      toggleBtn.addEventListener('click', () => {
-        let theme = document.documentElement.getAttribute('data-theme');
-        if (theme === 'dark') {
-          document.documentElement.setAttribute('data-theme', 'light');
-          localStorage.setItem('theme', 'light');
-          toggleBtn.innerHTML = '<i class="fas fa-moon"></i>';
-        } else {
-          document.documentElement.setAttribute('data-theme', 'dark');
-          localStorage.setItem('theme', 'dark');
-          toggleBtn.innerHTML = '<i class="fas fa-sun"></i>';
+    // Load Header & Footer
+    fetch('../header.html')
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById('header').innerHTML = html;
+        initDarkMode();
+      });
+
+    fetch('../footer.html')
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById('footer').innerHTML = html;
+        document.getElementById('year').textContent = new Date().getFullYear();
+      });
+
+    // Render Markdown Post
+    fetch('post2.md')
+      .then(res => res.text())
+      .then(text => {
+        document.getElementById('post-content').innerHTML = marked.parse(text);
+      });
+
+    // Render Previous/Next Post Nav
+    fetch('../posts.json')
+      .then(res => res.json())
+      .then(posts => {
+        const currentPath = window.location.pathname;
+        const index = posts.findIndex(p => currentPath.includes(p.url));
+
+        if (index !== -1) {
+          const prev = posts[index - 1];
+          const next = posts[index + 1];
+          const navContainer = document.getElementById('post-nav');
+
+          navContainer.innerHTML = `
+            ${prev ? `<a href="../${prev.url}"><i class="fas fa-arrow-left"></i> ${prev.title}</a>` : '<span></span>'}
+            ${next ? `<a href="../${next.url}">${next.title} <i class="fas fa-arrow-right"></i></a>` : '<span></span>'}
+          `;
         }
       });
-    }
-  }
-
-  // Load header, footer, dan panggil Dark Mode
-  fetch('../header.html')
-    .then(response => response.text())
-    .then(data => {
-      document.getElementById('header').innerHTML = data;
-      setupDarkMode(); // <--- Inisialisasi Dark Mode setelah header dimuat
-    });
-
-  fetch('../footer.html')
-    .then(response => response.text())
-    .then(data => {
-      document.getElementById('footer').innerHTML = data;
-      document.getElementById('year').textContent = new Date().getFullYear();
-    });
-
-  // Load dan render Markdown
-  fetch('post2.md')
-    .then(response => response.text())
-    .then(text => {
-      document.getElementById('post-content').innerHTML = marked.parse(text);
-    });
-</script>
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  </script>
 </body>
 </html>
