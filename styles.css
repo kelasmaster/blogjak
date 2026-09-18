@@ -1,7 +1,10 @@
-/* --- CSS Variables & Theme Definition --- */
+/* ==========================================
+   CSS Variables (Light & Dark Theme)
+   ========================================== */
 :root {
   --bg-color: #ffffff;
   --text-color: #222222;
+  --text-muted: #666666;
   --navbar-bg: #FFA500;
   --navbar-text: #000000;
   --card-bg: #f9f9f9;
@@ -12,11 +15,14 @@
   --btn-text: #ffffff;
   --btn-disabled: #cccccc;
   --btn-active: #FFA500;
+  --code-bg: #f4f4f4;
+  --blockquote-border: #FFA500;
 }
 
 [data-theme="dark"] {
   --bg-color: #121212;
   --text-color: #e0e0e0;
+  --text-muted: #aaaaaa;
   --navbar-bg: #1f1f1f;
   --navbar-text: #ffffff;
   --card-bg: #1e1e1e;
@@ -27,8 +33,13 @@
   --btn-text: #ffffff;
   --btn-disabled: #444444;
   --btn-active: #FFA500;
+  --code-bg: #2a2a2a;
+  --blockquote-border: #FFA500;
 }
 
+/* ==========================================
+   Global Reset & Styles
+   ========================================== */
 * {
   margin: 0;
   padding: 0;
@@ -40,10 +51,22 @@ body {
   line-height: 1.6;
   background-color: var(--bg-color);
   color: var(--text-color);
-  transition: background-color 0.3s, color 0.3s;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  padding: 0;
 }
 
-/* --- Header & Navigation --- */
+a {
+  color: #3b82f6;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* ==========================================
+   Header & Navigation
+   ========================================== */
 .navbar {
   position: relative;
   display: flex;
@@ -52,6 +75,7 @@ body {
   padding: 1rem 2rem;
   background: var(--navbar-bg);
   color: var(--navbar-text);
+  transition: background 0.3s ease;
 }
 
 .logo img {
@@ -88,6 +112,7 @@ body {
   font-size: 1.2rem;
   cursor: pointer;
   padding: 5px;
+  transition: color 0.3s ease;
 }
 
 .hamburger {
@@ -120,14 +145,15 @@ body {
   }
 }
 
-/* --- Main Layout --- */
+/* ==========================================
+   Main Layout & Post Items
+   ========================================== */
 .content {
   max-width: 900px;
   margin: 2rem auto;
   padding: 0 20px;
 }
 
-/* --- Post List Layouts --- */
 .post-list {
   margin-top: 2rem;
   display: flex;
@@ -140,6 +166,7 @@ body {
   border: 1px solid var(--card-border);
   border-radius: 8px;
   padding: 1.5rem;
+  transition: background 0.3s ease, border-color 0.3s ease;
 }
 
 .post-item h3 a {
@@ -151,8 +178,14 @@ body {
   color: #FFA500;
 }
 
-/* --- Image Gallery Grid Mode --- */
-.gallery-grid {
+.post-item p {
+  color: var(--text-muted);
+}
+
+/* ==========================================
+   Image Gallery Grid Mode
+   ========================================== */
+.gallery-grid, .gallery-item {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 20px;
@@ -164,7 +197,7 @@ body {
   border: 1px solid var(--card-border);
   border-radius: 8px;
   overflow: hidden;
-  transition: transform 0.2s;
+  transition: transform 0.2s ease, background 0.3s ease;
 }
 
 .gallery-item:hover {
@@ -190,7 +223,55 @@ body {
   font-size: 0.95rem;
 }
 
-/* --- Dynamic Pagination --- */
+/* ==========================================
+   Detail Halaman Artikel/Post (Markdown Support)
+   ========================================== */
+#post-content, .post-single {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 2rem;
+  margin-top: 1rem;
+  color: var(--text-color);
+}
+
+#post-content h1, #post-content h2, #post-content h3 {
+  color: var(--text-color);
+  margin-bottom: 1rem;
+}
+
+#post-content blockquote {
+  border-left: 4px solid var(--blockquote-border);
+  padding-left: 1rem;
+  margin: 1rem 0;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+#post-content code, #post-content pre {
+  background: var(--code-bg);
+  color: var(--text-color);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+}
+
+#post-content details {
+  background: var(--bg-color);
+  border: 1px solid var(--card-border);
+  padding: 0.8rem;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+}
+
+#post-content summary {
+  cursor: pointer;
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+/* ==========================================
+   Dynamic Pagination
+   ========================================== */
 .pagination {
   display: flex;
   justify-content: center;
@@ -208,7 +289,7 @@ body {
   border-radius: 4px;
   cursor: pointer;
   font-weight: bold;
-  transition: background 0.2s;
+  transition: background 0.2s ease;
 }
 
 .pagination button:hover:not(:disabled) {
@@ -227,13 +308,16 @@ body {
   opacity: 0.6;
 }
 
-/* --- Footer --- */
+/* ==========================================
+   Footer
+   ========================================== */
 footer {
   background: var(--footer-bg);
   color: var(--footer-text);
   text-align: center;
   padding: 1.5rem;
   margin-top: 3rem;
+  transition: background 0.3s ease;
 }
 
 .footer-content {
