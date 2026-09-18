@@ -1,50 +1,137 @@
- <style>
-      .container {
-            max-width: 800px;
-            margin: 0 auto;
-            font-family: Arial, sans-serif;
-        }
-    </style>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Home - My Blog</title>
+  <title>Kelas Master - Home</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
-<div id="header"></div>
-<div class="content">
-    <h2>Latest Posts</h2>
-    <div class="post-list">
-      <div class="post-item">
-        <h3><a href="posts/post1.html">My First Blog Post</a></h3>
-        <p>Posted on March 5, 2025</p>
-        <p>This is a short excerpt from the blog post...</p>
-      </div>
-     <div class="post-item">
-        <h3><a href="posts/post2.html">My Second Blog Post</a></h3>
-        <p>Posted on March 5, 2025</p>
-        <p>This is a short excerpt from the blog post...</p>
-      </div>
-    </div>
+  <div id="header"></div>
+
+  <div class="content">
+    <h2>Postingan Terbaru</h2>
+    
+    <!-- Wadah Konten Post/Galeri -->
+    <div id="post-list"></div>
+
+    <!-- Pagination Dinamis -->
+    <div id="pagination" class="pagination"></div>
   </div>
- <div id="footer"></div>
-<script>
-    // Load header and footer
-    fetch('header.html')
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById('header').innerHTML = data;
+
+  <div id="footer"></div>
+
+  <script>
+    const POSTS_PER_PAGE = 6;
+    // Ubah mode ke 'gallery' untuk tampilan Grid Galeri Foto, atau 'list' untuk daftar artikel biasa
+    const DISPLAY_MODE = 'gallery'; 
+
+    function loadElement(url, elementId) {
+      return fetch(url)
+        .then(response => {
+          if (!response.ok) throw new Error(`Error loading ${url}`);
+          return response.text();
+        })
+        .then(html => {
+          document.getElementById(elementId).innerHTML = html;
+        });
+    }
+
+    // Inisialisasi Dark Mode Logic
+    function initTheme() {
+      const toggleBtn = document.getElementById('theme-toggle');
+      if (!toggleBtn) return;
+
+      const currentTheme = localStorage.getItem('theme') || 
+        (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+
+      if (currentTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        toggleBtn.innerHTML = '<i class="fas fa-sun"></i>';
+      }
+
+      toggleBtn.addEventListener('click', () => {
+        let theme = document.documentElement.getAttribute('data-theme');
+        if (theme === 'dark') {
+          document.documentElement.setAttribute('data-theme', 'light');
+          localStorage.setItem('theme', 'light');
+          toggleBtn.innerHTML = '<i class="fas fa-moon"></i>';
+        } else {
+          document.documentElement.setAttribute('data-theme', 'dark');
+          localStorage.setItem('theme', 'dark');
+          toggleBtn.innerHTML = '<i class="fas fa-sun"></i>';
+        }
       });
-    fetch('footer.html')
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById('footer').innerHTML = data;
-        document.getElementById('year').textContent = new Date().getFullYear();
-      });
+    }
+
+    Promise.all([
+      loadElement('header.html', 'header'),
+      loadElement('footer.html', 'footer'),
+      fetch('posts.json').then(res => res.json())
+    ]).then(([_, __, posts]) => {
+      document.getElementById('year').textContent = new Date().getFullYear();
+      initTheme();
+
+      const currentPage = parseInt(new URLSearchParams(window.location.search).get('page')) || 1;
+      const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
+      const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
+      const paginatedPosts = posts.slice(startIndex, startIndex + POSTS_PER_PAGE);
+
+      const container = document.getElementById('post-list');
+
+      // Tampilan Mode Grid Galeri / Standard List
+      if (DISPLAY_MODE === 'gallery') {
+        container.className = 'gallery-grid';
+        container.innerHTML = paginatedPosts.map(post => `
+          <div class="gallery-item">
+            <a href="${post.url}">
+              <img src="${post.img || 'https://via.placeholder.com/300x200'}" alt="${post.alt || post.title}" loading="lazy">
+            </a>
+            <div class="gallery-info">
+              <a href="${post.url}">${post.title || post.alt}</a>
+            </div>
+          </div>
+        `).join('');
+      } else {
+        container.className = 'post-list';
+        container.innerHTML = paginatedPosts.map(post => `
+          <div class="post-item">
+            <h3><a href="${post.url}">${post.title}</a></h3>
+            ${post.date ? `<p><small>${post.date}</small></p>` : ''}
+            ${post.excerpt ? `<p>${post.excerpt}</p>` : ''}
+          </div>
+        `).join('');
+      }
+
+      // Render Dynamic Pagination (Double Arrow & Arrow)
+      const pagination = document.getElementById('pagination');
+      if (totalPages > 1) {
+        let paginationHTML = '';
+
+        // First & Prev Buttons
+        paginationHTML += `<button onclick="changePage(1)" ${currentPage === 1 ? 'disabled' : ''} title="First Page">&laquo;</button>`;
+        paginationHTML += `<button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''} title="Previous Page">&lsaquo;</button>`;
+
+        // Page Number Buttons
+        for (let i = 1; i <= totalPages; i++) {
+          paginationHTML += `<button onclick="changePage(${i})" class="${currentPage === i ? 'active' : ''}">${i}</button>`;
+        }
+
+        // Next & Last Buttons
+        paginationHTML += `<button onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''} title="Next Page">&rsaquo;</button>`;
+        paginationHTML += `<button onclick="changePage(${totalPages})" ${currentPage === totalPages ? 'disabled' : ''} title="Last Page">&raquo;</button>`;
+
+        pagination.innerHTML = paginationHTML;
+      }
+    }).catch(err => console.error('Error:', err));
+
+    window.changePage = (page) => {
+      const url = new URL(window.location);
+      url.searchParams.set('page', page);
+      window.history.pushState({}, '', url);
+      location.reload();
+    };
   </script>
 </body>
 </html>
